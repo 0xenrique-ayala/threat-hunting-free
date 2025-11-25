@@ -6,7 +6,7 @@ Free forever. No sign-up required.
 
 Commercial use & redistribution of free-tier rules allowed with attribution.
 
-## Questions or Rule Requests?
+**Questions or Rule Requests?**
 - Open a GitHub Discussion
 - DM me on LinkedIn: linkedin.com/in/enriqueayala
 
