@@ -51,3 +51,15 @@ WHERE (
     url CONTAINS '45.90.30.160/dns-query'
 )
 LAST 14 DAYS
+
+# Multi-Field Flow Search
+
+SELECT DATEFORMAT(starttime, 'yyyy-MM-dd HH:mm:ss') AS "Start Time", sourceip AS "Source IP", destinationip AS "Dest IP", destinationport AS "Dest Port", url AS "URL", applicationid AS "Application"
+FROM flows
+WHERE destinationport = 443
+  AND destinationip IN ('1.1.1.1', '1.0.0.1', '8.8.8.8', '8.8.4.4', '9.9.9.9', '149.112.112.112')
+  AND url ILIKE '%/dns-query%'
+GROUP BY sourceip, destinationip, url
+HAVING COUNT() > 5
+LAST 7 DAYS
+ORDER BY COUNT() DESC
