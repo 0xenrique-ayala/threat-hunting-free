@@ -1,5 +1,6 @@
-# Filename: vmsrc
+# Filenames: vmsrc, vnetd, if-up, viocli, vts, vmckd, virtual sockets (VSOCKS)
 
+aaf5569c8e349c15028bc3fac09eb982efb06eabac955b705a6d447263658e38
 b3b6a992540da96375e4781afd3052118ad97cfe60ccf004d732f76678f6820a
 57bd98dbb5a00e54f07ffacda1fea91451a0c0b532cd7d570e98ce2ff741c21d
 73fe8b8fb4bd7776362fd356fdc189c93cf5d9f6724f6237d829024c10263fe5
