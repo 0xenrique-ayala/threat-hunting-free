@@ -1,0 +1,53 @@
+# URL and IP Search
+
+SELECT *
+FROM events
+WHERE (
+    url = 'https://1.0.0.1/dns-query' OR
+    url = 'https://1.1.1.1/dns-query' OR
+    url = 'https://8.8.4.4/dns-query' OR
+    url = 'https://8.8.8.8/dns-query' OR
+    url = 'https://9.9.9.9/dns-query' OR
+    url = 'https://9.9.9.11/dns-query' OR
+    url = 'https://149.112.112.112/dns-query' OR
+    url = 'https://149.112.112.11/dns-query' OR
+    url = 'https://45.90.28.160/dns-query' OR
+    url = 'https://45.90.30.160/dns-query' OR
+    url ENDSWITH '/dns-query' AND destinationip IN (
+        '1.0.0.1','1.1.1.1','8.8.4.4','8.8.8.8',
+        '9.9.9.9','9.9.9.11','149.112.112.112','149.112.112.11',
+        '45.90.28.160','45.90.30.160'
+    )
+)
+LAST 14 DAYS
+
+# IP and Port Search
+
+SELECT *
+FROM events
+WHERE destinationip IN (
+    '1.0.0.1','1.1.1.1','8.8.4.4','8.8.8.8',
+    '9.9.9.9','9.9.9.11','149.112.112.112','149.112.112.11',
+    '45.90.28.160','45.90.30.160'
+)
+AND destinationport = 443
+AND (url CONTAINS '/dns-query' OR applicationprotocol = 'HTTPS' OR application = 'DoH')
+LAST 14 DAYS
+
+# Contains Search
+
+SELECT *
+FROM events
+WHERE (
+    url CONTAINS '1.0.0.1/dns-query' OR
+    url CONTAINS '1.1.1.1/dns-query' OR
+    url CONTAINS '8.8.4.4/dns-query' OR
+    url CONTAINS '8.8.8.8/dns-query' OR
+    url CONTAINS '9.9.9.9/dns-query' OR
+    url CONTAINS '9.9.9.11/dns-query' OR
+    url CONTAINS '149.112.112.112/dns-query' OR
+    url CONTAINS '149.112.112.11/dns-query' OR
+    url CONTAINS '45.90.28.160/dns-query' OR
+    url CONTAINS '45.90.30.160/dns-query'
+)
+LAST 14 DAYS
