@@ -1,0 +1,8 @@
+# Multi-Source Search
+
+index=* sourcetype IN ("pan:traffic", "bro:http", "stream:http") 
+app="ssl" OR tls=* 
+| join src_ip [ search index=* sourcetype IN ("bro:dns", "pan:traffic") url="*dns-query*" | rename src_ip as src_ip ] 
+| stats values(dest_ip) as dest_ips, count by src_ip, dest_port 
+| where count > 10 
+| table _time, src_ip, dest_ips, dest_port, count
