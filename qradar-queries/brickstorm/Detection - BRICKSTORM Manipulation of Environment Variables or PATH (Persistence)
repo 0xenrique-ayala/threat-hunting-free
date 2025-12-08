@@ -1,0 +1,12 @@
+# Single-Field Search
+
+SELECT DATEFORMAT(starttime, 'yyyy-MM-dd HH:mm:ss') AS "Time", sourceip AS "Source IP", process AS "Process", commandline AS "Command Line", username AS "User", parentprocess AS "Parent Process"
+FROM events
+WHERE commandline ILIKE '%export%PATH%' 
+   OR commandline ILIKE '%env%' 
+   OR commandline ILIKE '%listenAddr%' 
+   OR commandline ILIKE '%listenPath%' 
+   OR commandline ILIKE '%password%'
+   OR commandline ILIKE '%VMware%'
+LAST 7 DAYS
+ORDER BY starttime DESC
