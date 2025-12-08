@@ -1,0 +1,8 @@
+# Multi-Source Multi-Field Search
+
+index=* sourcetype IN ("linux:secure", "sysmon:*", "endpoint:*") 
+(file_name IN ("vmsrc", "vnetd", "if-up", "viocli", "vts", "vmckd", "vmware-sphere", "updatemgr", "vami") 
+OR file_path="*sysconfig*" OR file_path="*vmware*" OR file_path="*jre-vmware*") 
+(EventCode=4688 OR CommandLine="*cp*" OR CommandLine="*mv*" OR process_name IN ("cp", "mv", "chmod")) 
+| table _time, host, file_name, file_path, process_name, CommandLine, user
+| sort -_time
