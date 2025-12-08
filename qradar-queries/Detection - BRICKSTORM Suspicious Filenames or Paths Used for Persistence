@@ -1,0 +1,8 @@
+# Multi-Field Search
+
+SELECT DATEFORMAT(starttime, 'yyyy-MM-dd HH:mm:ss') AS "Time", sourceip AS "Source IP", filename AS "File Name", filepath AS "File Path", process AS "Process", commandline AS "Command Line", username AS "User", QIDNAME(qid) AS "Event Name"
+FROM events
+WHERE (filename ILIKE '%vmsrc%' OR filename ILIKE '%vnetd%' OR filename ILIKE '%if-up%' OR filename ILIKE '%viocli%' OR filename ILIKE '%vts%' OR filename ILIKE '%vmckd%' OR filename ILIKE '%vmware-sphere%' OR filename ILIKE '%updatemgr%' OR filename ILIKE '%vami%')
+   OR (filepath ILIKE '%/etc/sysconfig/%' OR filepath ILIKE '%/opt/vmware/sbin/%' OR filepath ILIKE '%/usr/java/jre-vmware/bin/%')
+LAST 7 DAYS
+ORDER BY starttime DESC
