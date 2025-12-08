@@ -1,0 +1,16 @@
+# Multi-Field Flow Search
+
+SELECT DATEFORMAT(starttime, 'yyyy-MM-dd HH:mm:ss') AS "Start Time", sourceip AS "Source IP", destinationip AS "Dest IP", destinationport AS "Dest Port", COUNT() AS "Flow Count"
+FROM flows
+WHERE destinationport = 443
+  AND sourceip IN (
+    SELECT sourceip FROM flows
+    WHERE destinationport = 443
+      AND destinationip IN ('1.1.1.1', '1.0.0.1', '8.8.8.8', '8.8.4.4', '9.9.9.9', '149.112.112.112')
+      AND url ILIKE '%/dns-query%'
+    LAST 7 DAYS
+  )
+GROUP BY sourceip, destinationip, destinationport
+HAVING COUNT() > 10
+LAST 7 DAYS
+ORDER BY "Flow Count" DESC
