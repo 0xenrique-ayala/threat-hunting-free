@@ -1,2 +1,2 @@
-# Check for Brickstorm PATH Variables
+# Check for Brickstorm PATH Variables, Every 4 Hours
 0 */4 * * * /vmfs/volumes/<your-datastore>/scripts/check_brickstorm_path.sh
