@@ -1,4 +1,4 @@
-**Free Threat Hunting & Detection Intel/Rules**
+**Free Threat Hunting & Detection Rules/Intel**
 
 High-fidelity Sigma rules, Splunk SPL, Sentinel KQL, and QRadar AQL queries
 
