@@ -1,4 +1,4 @@
-**Free Threat Hunting & Detection Rules/Intel**
+**Free Threat Hunting & Detection Rules/Queries/Intel**
 
 Sigma rules, YARA rules, Splunk SPL Queries, QRadar AQL Queries, and more.
 
