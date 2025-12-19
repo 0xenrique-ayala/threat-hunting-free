@@ -1,0 +1,74 @@
+# Reference Set
+
+Step 1: Create a Reference Set for Known DoH Resolver IPsReference sets are ideal for IP lists (easy to maintain/update).Go to Admin tab > Reference Set Management.
+Click Add.
+Name: Known DoH Resolvers (or similar).
+Type: IP.
+Add the IPs:1.0.0.1
+1.1.1.1
+8.8.4.4
+8.8.8.8
+9.9.9.9
+9.9.9.11
+149.112.112.112
+149.112.112.11
+45.90.28.160
+45.90.30.160
+
+Save.
+
+# Building Block
+
+Step 2: Create a Building Block (Core Detection Logic)Building Blocks group common tests and help avoid rule limits/false positives.Go to Offenses tab > Rules.
+Actions > New Building Block.
+Rule Wizard opens:Name: BB: Potential DNS over HTTPS Activity
+Description: Detects traffic to known public DoH resolvers on port 443 with URL indicators.
+
+In the Tests section (AND logic by default):Add test: when the destination IP is contained in a reference set > Select Known DoH Resolvers.
+Add test: when the destination port is one of > 443 (or "equals 443").
+Add test (for URL indicators – OR group these):Click the "+" to add a new group (set to OR).
+In the OR group:when the URL contains > /dns-query
+when the URL ends with > /dns-query (if available; otherwise use contains)
+Optionally: when the URL is one of > list exact full URLs if your proxy/DSM parses them fully (e.g., https://1.1.1.1/dns-query).
+
+If your events have application classification: when the application is > DoH (if tagged), or protocol is HTTPS.
+
+If no direct "application" test for DoH: Rely on URL + IP + port (most reliable for proxies/firewalls).
+
+Notes:If exact full URLs are parsed (e.g., from web proxies), add when the URL is one of the 10 exact paths.
+For broader catch: Add another OR test for application/protocol if available in your events.
+
+No responses needed (BBs don't create offenses directly).
+Save and deploy changes.
+
+# Main Rule
+
+Step 3: Create the Main Custom Rule (Offense Generation)Actions > New Event Rule (or threshold/anomaly if you want counts).
+Name: Potential DNS over HTTPS (DoH) Usage
+In Tests:Add: when an event matches any of the following building blocks/rules > Select your new BB.
+
+Optional enhancements for better offenses:Add thresholding: e.g., when at least X unique source IPs (or events) match the BB in Y minutes.
+Or make it a threshold rule from the start for volume-based alerting.
+
+Rule Response section:Ensure the detected event is part of an offense.
+Dispatch new event (custom notification).
+Severity: 5–8 (adjust based on policy).
+Optionally: Add to reference set (e.g., track sources), notify, etc.
+
+Response Limiter: e.g., once per source IP per hour/day to reduce noise.
+Save and deploy.
+
+# Testing the Rule
+
+Testing the RuleBefore enabling the rule: Use Log Activity searches with the same parameters (destination IP in reference set, port 443, URL contains /dns-query) over last 1–7 days to estimate volume.
+Enable the BB first > Monitor matching events.
+Enable the main rule (start disabled) > Use historical correlation or wait for live traffic.
+Tune false positives:Exclude legitimate sources (e.g., add internal IPs to an exclusion reference set).
+False positive tuning on individual events/offenses.
+If too noisy: Threshold on unique sources/users, or exclude known browsers via user-agent if parsed.
+
+Additional TipsThis works best with web proxy/firewall logs (e.g., Palo Alto, Blue Coat, Zscaler) that parse URLs over HTTPS.
+If your DSM doesn't expose full URLs: Rely more on IP + port 443 + high volume to those IPs.
+For advanced: Create multiple BBs (one strict for exact /dns-query, one broader) and combine.
+Deploy changes after saving!
+
