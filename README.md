@@ -1,6 +1,6 @@
 **Free Threat Hunting & Detection Rules/Intel**
 
-Sigma rules, Splunk SPL, and QRadar AQL queries
+Sigma rules, YARA rules, Splunk SPL Queries, QRadar AQL Queries, and more.
 
 Free forever. No sign-up required.
 
