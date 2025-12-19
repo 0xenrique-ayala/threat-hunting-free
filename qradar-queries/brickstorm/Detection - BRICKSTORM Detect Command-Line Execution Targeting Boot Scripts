@@ -1,0 +1,15 @@
+SELECT *
+FROM events
+WHERE (
+    commandline CONTAINS ' /etc/rc.local.d/local.sh' OR
+    commandline CONTAINS ' /etc/rc.local' OR
+    commandline CONTAINS 'vi ' OR commandline CONTAINS 'vim ' OR commandline CONTAINS 'nano ' OR
+    commandline CONTAINS 'echo >> /etc/rc.local' OR
+    commandline CONTAINS 'sed ' OR commandline CONTAINS 'chmod +x /etc/rc.local' OR
+    commandline CONTAINS '/etc/sysconfig/init'
+)
+AND (
+    process ILIKE '%sh' OR process ILIKE '%bash' OR
+    QRadarEventName ILIKE '%command%' OR eventname ILIKE '%exec%'
+)
+LAST 14 DAYS
