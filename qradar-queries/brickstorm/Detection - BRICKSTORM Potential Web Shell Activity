@@ -1,0 +1,23 @@
+SELECT * FROM events 
+WHERE (
+  (sourceip IS NOT NULL OR destinationip IS NOT NULL) -- Optional: Filter to network-related events if needed
+  AND (
+    -- File creation/modification in web directories (adjust paths as needed for your environment)
+    (filename ILIKE '%/var/www/%' OR filename ILIKE '%/htdocs/%' OR filename ILIKE '%/html/%' OR filename ILIKE '%/public_html/%' OR filename ILIKE '%/www/%')
+    AND (filename ILIKE '%.php' OR filename ILIKE '%.jsp' OR filename ILIKE '%.aspx' OR filename ILIKE '%.sh' OR filename ILIKE '%.py' OR filename ILIKE '%.pl')
+    AND logsourcename IN ('Sysmon', 'Auditd', 'File Integrity Monitoring') -- Adjust to your log sources for file events
+  )
+  OR
+  (
+    -- Process creation by web server spawning suspicious children
+    parentprocessname ILIKE '%apache%' OR parentprocessname ILIKE '%nginx%' OR parentprocessname ILIKE '%httpd%' OR parentprocessname ILIKE '%php-cgi%' OR parentprocessname ILIKE '%w3wp.exe%'
+    AND (
+      processname ILIKE '%bash%' OR processname ILIKE '%sh%' OR processname ILIKE '%curl%' OR processname ILIKE '%wget%' OR processname ILIKE '%nc%' OR processname ILIKE '%netcat%' OR processname ILIKE '%python%' OR processname ILIKE '%perl%' OR processname ILIKE '%cmd.exe%' OR processname ILIKE '%powershell.exe%'
+    )
+    AND logsourcename IN ('Sysmon', 'Auditd', 'Process Creation') -- Adjust to your process log sources
+  )
+)
+GROUP BY utf8(payload) -- Or relevant fields
+LAST 7 DAYS -- Adjust time window
+ORDER BY starttime DESC
+LIMIT 100
